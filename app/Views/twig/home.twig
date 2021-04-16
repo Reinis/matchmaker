@@ -6,4 +6,15 @@
     <h1>
         Welcome to Matchmaker!
     </h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="imageFile" id="imageFile">
+        <input type="submit" value="Upload Image" name="submit">
+    </form>
+    <div>
+        {% for image in iamges %}
+            <div>
+                <img src="{{ image }}" alt="image">
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

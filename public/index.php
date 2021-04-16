@@ -9,6 +9,7 @@ use FastRoute\RouteCollector;
 use League\Container\Container;
 use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
+use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
 use Matchmaker\Views\TwigView;
@@ -39,11 +40,15 @@ $container->add(View::class, TwigView::class)
 
 $container->add(HomeController::class)
     ->addArgument(View::class);
+$container->add(UploadController::class)
+    ->addArgument(View::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
     function (RouteCollector $r) {
         $r->addRoute('GET', '/', [HomeController::class, 'index']);
+
+        $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
     }
 );
 

@@ -1,5 +1,6 @@
 .env
 .env.test
 /.idea/
+/storage/uploads/
 /twig_cache/
 /vendor/
