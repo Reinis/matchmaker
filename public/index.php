@@ -5,8 +5,10 @@ declare(strict_types=1);
 require_once "../vendor/autoload.php";
 
 
+use FastRoute\RouteCollector;
 use League\Container\Container;
 use Matchmaker\Config;
+use Matchmaker\Controllers\HomeController;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
 use Matchmaker\Views\TwigView;
@@ -22,9 +24,9 @@ $container->add(Config::class)
 $container->add(UserRepository::class, MySQLUserRepository::class)
     ->addArgument(Config::class);
 
-$container->add(FilesystemLoader::class, FilesystemLoader::class)
+$container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
-$container->add(Environment::class, Environment::class)
+$container->add(Environment::class)
     ->addArgument(FilesystemLoader::class)
     ->addArgument(
         [
@@ -34,3 +36,38 @@ $container->add(Environment::class, Environment::class)
     );
 $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
+
+$container->add(HomeController::class)
+    ->addArgument(View::class);
+
+
+$dispatcher = FastRoute\simpleDispatcher(
+    function (RouteCollector $r) {
+        $r->addRoute('GET', '/', [HomeController::class, 'index']);
+    }
+);
+
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+
+// Strip query string (?foo=bar) and decode URI
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
+}
+$uri = rawurldecode($uri);
+
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+switch ($routeInfo[0]) {
+    case FastRoute\Dispatcher::NOT_FOUND:
+        // ... 404 Not Found
+        break;
+    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        // ... 405 Method Not Allowed
+        break;
+    case FastRoute\Dispatcher::FOUND:
+        [$class, $method] = $routeInfo[1];
+        $vars = $routeInfo[2];
+        echo $container->get($class)->$method($vars);
+        break;
+}
