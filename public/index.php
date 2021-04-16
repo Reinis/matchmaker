@@ -9,6 +9,7 @@ use FastRoute\RouteCollector;
 use League\Container\Container;
 use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
+use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
@@ -40,6 +41,8 @@ $container->add(View::class, TwigView::class)
 
 $container->add(HomeController::class)
     ->addArgument(View::class);
+$container->add(LoginController::class)
+    ->addArgument(View::class);
 $container->add(UploadController::class)
     ->addArgument(View::class);
 
@@ -47,6 +50,10 @@ $container->add(UploadController::class)
 $dispatcher = FastRoute\simpleDispatcher(
     function (RouteCollector $r) {
         $r->addRoute('GET', '/', [HomeController::class, 'index']);
+
+        $r->addRoute('GET', '/login', [LoginController::class, 'login']);
+        $r->addRoute('POST', '/login', [LoginController::class, 'authenticate']);
+        $r->addRoute('POST', '/register', [LoginController::class, 'register']);
 
         $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
     }

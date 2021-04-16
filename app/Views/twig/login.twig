@@ -1,0 +1,17 @@
+{% extends "base.twig" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h1>Register / Log In</h1>
+    <div>
+        <form action="/login" method="post">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username">
+            <label for="password">Password:</label>
+            <input type="text" name="password" id="password">
+            <input type="submit" name="back" value="Register" formaction="/register" formmethod="get">
+            <input type="submit" name="login" value="Login">
+        </form>
+    </div>
+{% endblock %}
