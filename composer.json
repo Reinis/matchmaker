@@ -10,7 +10,8 @@
     "autoload": {
         "psr-4": {
             "Matchmaker\\": "app/",
-            "MatchmakerTests\\Unit\\": "tests/unit/"
+            "MatchmakerTests\\Unit\\": "tests/unit/",
+            "MatchmakerTests\\Integration\\": "tests/integration/"
         }
     },
     "require-dev": {
@@ -19,5 +20,10 @@
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-asserts": "^1.3",
         "codeception/module-db": "^1.1"
+    },
+    "require": {
+        "ext-pdo": "*",
+        "vlucas/phpdotenv": "^5.3",
+        "league/container": "^3.3"
     }
 }

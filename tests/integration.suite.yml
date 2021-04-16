@@ -1,0 +1,9 @@
+actor: IntegrationTester
+modules:
+  enabled:
+    - Db:
+        dsn: "%MATCHMAKER_DB_DSN%"
+        user: "%MATCHMAKER_DB_USER%"
+        password: "%MATCHMAKER_DB_PASSWORD%"
+    - Asserts
+    - \Helper\Integration
