@@ -3,15 +3,26 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <h1>Register / Log In</h1>
-    <div>
+    <div class="flex justify-center">
         <form action="/login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username">
-            <label for="password">Password:</label>
-            <input type="text" name="password" id="password">
-            <input type="submit" name="back" value="Register" formaction="/register" formmethod="get">
-            <input type="submit" name="login" value="Login">
+            <h1 class="text-2xl font-bold text-center mb-4">Register / Log In</h1>
+            <div class="flex flex-col text-xl inputs">
+                <label for="username" class="font-bold">Username</label>
+                <input type="text" name="username" id="username">
+                <label for="password" class="font-bold">Password</label>
+                <input type="text" name="password" id="password">
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                <input
+                        type="submit"
+                        name="back"
+                        value="Register"
+                        formaction="/register"
+                        formmethod="get"
+                        class="btn-gray"
+                >
+                <input type="submit" name="login" value="Login" class="btn-gray">
+            </div>
         </form>
     </div>
 {% endblock %}

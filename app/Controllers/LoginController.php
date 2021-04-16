@@ -25,11 +25,15 @@ class LoginController
 
     public function authenticate(): string
     {
-        return $this->view->render('home');
+        $message = "Authenticating...";
+
+        return $this->view->render('home', compact('message'));
     }
 
     public function register(): string
     {
-        return $this->view->render('home');
+        $message = "Registering...";
+
+        return $this->view->render('home', compact('message'));
     }
 }

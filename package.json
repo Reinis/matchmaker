@@ -1,0 +1,29 @@
+{
+  "name": "matchmaker",
+  "version": "1.0.0",
+  "description": "Matchmaker exercise",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build-css": "tailwindcss build app/Views/css/tailwind.css -o public/static/css/styles.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reinis/matchmaker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Reinis/matchmaker/issues"
+  },
+  "homepage": "https://github.com/Reinis/matchmaker#readme",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.3.2",
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.10",
+    "tailwindcss": "^2.1.1"
+  }
+}
