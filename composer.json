@@ -9,7 +9,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Matchmaker\\": "app/"
+            "Matchmaker\\": "app/",
+            "MatchmakerTests\\Unit\\": "tests/unit/"
         }
     },
     "require-dev": {
