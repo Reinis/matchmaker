@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Views\View;
 
@@ -13,19 +14,29 @@ class UploadController
 {
     private View $view;
     private ImageService $imageService;
+    private FinfoMimeTypeDetector $mimeTypeDetector;
+    /**
+     * @var string[]
+     */
+    private array $allowedTypes = [
+        'image/png',
+        'image/jpeg',
+        'image/gif',
+    ];
 
-    public function __construct(View $view, ImageService $imageService)
+    public function __construct(View $view, ImageService $imageService, FinfoMimeTypeDetector $mimeTypeDetector)
     {
         $this->view = $view;
         $this->imageService = $imageService;
+        $this->mimeTypeDetector = $mimeTypeDetector;
     }
 
     public function upload(): string
     {
         $targetDir = __DIR__ . '/../../storage/uploads/';
         $filename = basename($_FILES['imageFile']['name']);
+        $mimeType = $this->mimeTypeDetector->detectMimeTypeFromFile($_FILES['imageFile']['tmp_name']);
         $targetFile = $targetDir . $filename;
-        $imageType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
         $ok = true;
         $errors = [];
 
@@ -47,9 +58,9 @@ class UploadController
             $errors[] = "File too large!";
         }
 
-        if (!in_array($imageType, ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (!in_array($mimeType, $this->allowedTypes, true)) {
             $ok = false;
-            $errors[] = "Image type '$imageType' is not supported!";
+            $errors[] = "Image type '$mimeType' is not supported!";
         }
 
         if (!$ok) {

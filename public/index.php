@@ -7,6 +7,7 @@ require_once "../vendor/autoload.php";
 
 use FastRoute\RouteCollector;
 use League\Container\Container;
+use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
 use Matchmaker\Controllers\LoginController;
@@ -50,6 +51,8 @@ $container->add(Environment::class)
 $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
+$container->add(FinfoMimeTypeDetector::class);
+
 $container->add(HomeController::class)
     ->addArgument(View::class)
     ->addArgument(ImageService::class);
@@ -58,7 +61,8 @@ $container->add(LoginController::class)
     ->addArgument(LoginService::class);
 $container->add(UploadController::class)
     ->addArgument(View::class)
-    ->addArgument(ImageService::class);
+    ->addArgument(ImageService::class)
+    ->addArgument(FinfoMimeTypeDetector::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
