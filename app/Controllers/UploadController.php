@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use League\Flysystem\FilesystemException;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Views\View;
@@ -24,7 +25,11 @@ class UploadController
         'image/gif',
     ];
 
-    public function __construct(View $view, ImageService $imageService, FinfoMimeTypeDetector $mimeTypeDetector)
+    public function __construct(
+        View $view,
+        ImageService $imageService,
+        FinfoMimeTypeDetector $mimeTypeDetector
+    )
     {
         $this->view = $view;
         $this->imageService = $imageService;
@@ -68,12 +73,16 @@ class UploadController
             return $this->view->render('error', compact('message', 'errors'));
         }
 
-        if (!move_uploaded_file($_FILES['imageFile']['tmp_name'], $targetFile)) {
-            $message = "Moving file to '$targetFile' failed.";
+        try {
+            $this->imageService->save(
+                $_SESSION['auth']['user'],
+                $filename,
+                $_FILES['imageFile']['tmp_name'],
+            );
+        } catch (FilesystemException $e) {
+            $message = "Saving '$filename' failed";
             return $this->view->render('error', compact('message'));
         }
-
-        $this->imageService->save($_SESSION['auth']['user'], $filename);
 
         $message = "File '" . htmlspecialchars($filename) . "' uploaded.";
         return $this->view->render('success', compact('message'));

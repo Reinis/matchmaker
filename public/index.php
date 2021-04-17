@@ -7,6 +7,9 @@ require_once "../vendor/autoload.php";
 
 use FastRoute\RouteCollector;
 use League\Container\Container;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
@@ -32,9 +35,15 @@ $container->add(Config::class)
 $container->add(UserRepository::class, MySQLUserRepository::class)
     ->addArgument(Config::class);
 
+$container->add(FilesystemAdapter::class, LocalFilesystemAdapter::class)
+    ->addArgument(__DIR__ . '/../storage/uploads');
+$container->add(Filesystem::class)
+    ->addArgument(FilesystemAdapter::class);
+
 $container->add(LoginService::class)
     ->addArgument(UserRepository::class);
 $container->add(ImageService::class)
+    ->addArgument(Filesystem::class)
     ->addArgument(UserRepository::class);
 
 $container->add(FilesystemLoader::class)
