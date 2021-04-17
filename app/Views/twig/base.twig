@@ -15,7 +15,11 @@
             <a href="/">Matchmaker</a>
         </div>
         <div class="text-2xl font-bold underline">
-            <a href="/login">Log In</a>
+            {% if session.auth.user %}
+                <a href="/logout">{{ session.auth.user }}</a>
+            {% else %}
+                <a href="/login">Log In</a>
+            {% endif %}
         </div>
     </nav>
 </div>

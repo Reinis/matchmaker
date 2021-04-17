@@ -40,10 +40,12 @@ class MySQLUserRepository implements UserRepository
 
     public function create(User $user): void
     {
-        $sql = "insert into `users` (first_name, last_name, gender, profile_pic) values (?, ?, ?, ?);";
+        $sql = "insert into `users` (username, secret, first_name, last_name, gender, profile_pic) values (?, ?, ?, ?, ?, ?);";
         $statement = $this->connection->prepare($sql);
         $statement->execute(
             [
+                $user->getUsername(),
+                $user->getSecret(),
                 $user->getFirstName(),
                 $user->getLastName(),
                 $user->getGender(),
@@ -107,5 +109,35 @@ class MySQLUserRepository implements UserRepository
         $sql = "delete from `users` where id = ?;";
         $statement = $this->connection->prepare($sql);
         $statement->execute([$id]);
+    }
+
+    public function getUserByUsername(string $username): User
+    {
+        $sql = "select * from `users` where username = ?;";
+        $errorMessage = "User '$username' not found";
+
+        return $this->fetch($sql, $errorMessage, $username);
+    }
+
+    private function fetch(string $sql, string $errorMessage, string ...$args): User
+    {
+        $statement = $this->connection->prepare($sql);
+        $statement->setFetchMode(PDO::FETCH_OBJ);
+        $statement->execute($args);
+        $result = $statement->fetch();
+
+        if ($result === false) {
+            throw new InvalidArgumentException($errorMessage);
+        }
+
+        return new User(
+            $result->username,
+            $result->secret,
+            $result->first_name,
+            $result->last_name,
+            $result->gender,
+            $result->profile_pic,
+            $result->id,
+        );
     }
 }

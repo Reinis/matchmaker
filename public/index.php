@@ -13,10 +13,14 @@ use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
+use Matchmaker\Services\LoginService;
 use Matchmaker\Views\TwigView;
 use Matchmaker\Views\View;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+
+
+session_start();
 
 
 $container = new Container();
@@ -25,6 +29,9 @@ $container->add(Config::class)
     ->addArgument('.env');
 $container->add(UserRepository::class, MySQLUserRepository::class)
     ->addArgument(Config::class);
+
+$container->add(LoginService::class)
+    ->addArgument(UserRepository::class);
 
 $container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
@@ -35,14 +42,16 @@ $container->add(Environment::class)
             'cache' => __DIR__ . '/../twig_cache',
             'auto_reload' => true,
         ]
-    );
+    )
+    ->addMethodCall('addGlobal', ['session', $_SESSION]);
 $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
 $container->add(HomeController::class)
     ->addArgument(View::class);
 $container->add(LoginController::class)
-    ->addArgument(View::class);
+    ->addArgument(View::class)
+    ->addArgument(LoginService::class);
 $container->add(UploadController::class)
     ->addArgument(View::class);
 
@@ -54,6 +63,8 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute('GET', '/login', [LoginController::class, 'login']);
         $r->addRoute('POST', '/login', [LoginController::class, 'authenticate']);
         $r->addRoute('POST', '/register', [LoginController::class, 'register']);
+
+        $r->addRoute('GET', '/logout', [LoginController::class, 'logout']);
 
         $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
     }

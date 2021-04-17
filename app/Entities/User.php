@@ -9,12 +9,16 @@ namespace Matchmaker\Entities;
 class User
 {
     private ?int $id;
+    private string $username;
+    private string $secret;
     private string $firstName;
     private string $lastName;
     private string $gender;
     private string $profilePic;
 
     public function __construct(
+        string $username,
+        string $secret,
         string $firstName,
         string $lastName,
         string $gender = 'Unknown',
@@ -23,10 +27,22 @@ class User
     )
     {
         $this->id = $id;
+        $this->username = $username;
+        $this->secret = $secret;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->gender = $gender;
         $this->profilePic = $profilePic;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getSecret(): string
+    {
+        return $this->secret;
     }
 
     public function getId(): ?int
