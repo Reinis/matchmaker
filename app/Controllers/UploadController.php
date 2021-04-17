@@ -6,21 +6,25 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use Matchmaker\Services\ImageService;
 use Matchmaker\Views\View;
 
 class UploadController
 {
     private View $view;
+    private ImageService $imageService;
 
-    public function __construct(View $view)
+    public function __construct(View $view, ImageService $imageService)
     {
         $this->view = $view;
+        $this->imageService = $imageService;
     }
 
     public function upload(): string
     {
         $targetDir = __DIR__ . '/../../storage/uploads/';
-        $targetFile = $targetDir . basename($_FILES['imageFile']['name']);
+        $filename = basename($_FILES['imageFile']['name']);
+        $targetFile = $targetDir . $filename;
         $imageType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
         $ok = true;
         $errors = [];
@@ -58,7 +62,9 @@ class UploadController
             return $this->view->render('error', compact('message'));
         }
 
-        $message = "File '" . htmlspecialchars(basename($_FILES['imageFile']['name'])) . "' uploaded.";
+        $this->imageService->save($_SESSION['auth']['user'], $filename);
+
+        $message = "File '" . htmlspecialchars($filename) . "' uploaded.";
         return $this->view->render('success', compact('message'));
     }
 }

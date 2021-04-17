@@ -13,6 +13,7 @@ use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
+use Matchmaker\Services\ImageService;
 use Matchmaker\Services\LoginService;
 use Matchmaker\Views\TwigView;
 use Matchmaker\Views\View;
@@ -32,6 +33,8 @@ $container->add(UserRepository::class, MySQLUserRepository::class)
 
 $container->add(LoginService::class)
     ->addArgument(UserRepository::class);
+$container->add(ImageService::class)
+    ->addArgument(UserRepository::class);
 
 $container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
@@ -48,12 +51,14 @@ $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
 $container->add(HomeController::class)
-    ->addArgument(View::class);
+    ->addArgument(View::class)
+    ->addArgument(ImageService::class);
 $container->add(LoginController::class)
     ->addArgument(View::class)
     ->addArgument(LoginService::class);
 $container->add(UploadController::class)
-    ->addArgument(View::class);
+    ->addArgument(View::class)
+    ->addArgument(ImageService::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
