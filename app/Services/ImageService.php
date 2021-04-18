@@ -6,20 +6,31 @@ declare(strict_types=1);
 namespace Matchmaker\Services;
 
 
+use Intervention\Image\ImageManager;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\UserRepository;
 
 
 class ImageService
 {
     private Filesystem $filesystem;
+    private ImageManager $imageManager;
     private UserRepository $userRepository;
+    private ImageRepository $imageRepository;
 
-    public function __construct(Filesystem $filesystem, UserRepository $userRepository)
+    public function __construct(
+        Filesystem $filesystem,
+        ImageManager $imageManager,
+        UserRepository $userRepository,
+        ImageRepository $imageRepository
+    )
     {
         $this->filesystem = $filesystem;
+        $this->imageManager = $imageManager;
         $this->userRepository = $userRepository;
+        $this->imageRepository = $imageRepository;
     }
 
     /**
@@ -30,10 +41,17 @@ class ImageService
         $user = $this->userRepository->getUserByUsername($username);
 
         $encodedName = $this->encodeFilename($username, $originalFilename);
-
         $this->filesystem->writeStream($this->encodePath($encodedName), fopen($sourceFilename, 'rb'));
 
-        $user->setProfilePic($encodedName);
+        $encodedResizedName = $this->encodeFilename($username, $originalFilename . '_600x600');
+        $image = $this->imageManager
+            ->make($sourceFilename)
+            ->resize(600, 600)
+            ->encode();
+        $this->filesystem->writeStream($this->encodePath($encodedResizedName), $image->stream()->detach());
+
+        $this->imageRepository->save($originalFilename, $encodedName, $encodedResizedName, $user->getId());
+        $user->setProfilePic($encodedResizedName);
 
         $this->userRepository->update($user);
     }

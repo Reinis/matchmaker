@@ -6,6 +6,7 @@ require_once "../vendor/autoload.php";
 
 
 use FastRoute\RouteCollector;
+use Intervention\Image\ImageManager;
 use League\Container\Container;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
@@ -15,6 +16,8 @@ use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
 use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\UploadController;
+use Matchmaker\Repositories\ImageRepository;
+use Matchmaker\Repositories\MySQLImageRepository;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
 use Matchmaker\Services\ImageService;
@@ -34,17 +37,28 @@ $container->add(Config::class)
     ->addArgument('.env');
 $container->add(UserRepository::class, MySQLUserRepository::class)
     ->addArgument(Config::class);
+$container->add(ImageRepository::class, MySQLImageRepository::class)
+    ->addArgument(Config::class);
 
 $container->add(FilesystemAdapter::class, LocalFilesystemAdapter::class)
     ->addArgument(__DIR__ . '/../storage/uploads');
 $container->add(Filesystem::class)
     ->addArgument(FilesystemAdapter::class);
 
+$container->add(ImageManager::class)
+    ->addArgument(
+        [
+            'driver' => 'gd',
+        ]
+    );
+
 $container->add(LoginService::class)
     ->addArgument(UserRepository::class);
 $container->add(ImageService::class)
     ->addArgument(Filesystem::class)
-    ->addArgument(UserRepository::class);
+    ->addArgument(ImageManager::class)
+    ->addArgument(UserRepository::class)
+    ->addArgument(ImageRepository::class);
 
 $container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
