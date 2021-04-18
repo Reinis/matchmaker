@@ -7,6 +7,7 @@ namespace Matchmaker\Controllers;
 
 
 use Matchmaker\Services\LoginService;
+use Matchmaker\Views\Flash;
 use Matchmaker\Views\View;
 
 
@@ -26,19 +27,19 @@ class LoginController
         return $this->view->render('login');
     }
 
-    public function authenticate(): string
+    public function authenticate(): void
     {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
         if ($username === '' || $password === '') {
-            $message = "Please provide a username an password.";
-            return $this->view->render('error', compact('message'));
+            flash("Please provide a username an password", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /login');
         }
 
         if (!$this->loginService->verify($username, $password)) {
-            $message = "Login failed.";
-            return $this->view->render('error', compact('message'));
+            flash("Login failed", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
         }
 
         $_SESSION['auth']['user'] = $username;
@@ -46,19 +47,19 @@ class LoginController
         header('Location: /');
     }
 
-    public function register(): string
+    public function register(): void
     {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
         if ($username === '' || $password === '') {
-            $message = "Please provide a username an password.";
-            return $this->view->render('error', compact('message'));
+            flash("Please provide a username an password", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /login');
         }
 
         if (!$this->loginService->new($username, $password)) {
-            $message = "Failed to create a new user";
-            return $this->view->render('error', compact('message'));
+            flash("Failed to create a new user", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /login');
         }
 
         header('Location: /');
