@@ -24,6 +24,19 @@ class UploadController
         'image/jpeg',
         'image/gif',
     ];
+    /**
+     * @var string[]
+     */
+    private array $uploadErrors = [
+        0 => 'Upload successful',
+        1 => 'The file exceeds the upload_max_filesize directive in php.ini',
+        2 => 'The file exceeds the MAX_FILE_SIZE directive in the HTML form',
+        3 => 'The file was only partially uploaded',
+        4 => 'No file was uploaded',
+        6 => 'Missing a temporary folder',
+        7 => 'Failed to write file to disk',
+        8 => 'A PHP extension stopped the file upload',
+    ];
 
     public function __construct(
         View $view,
@@ -44,6 +57,11 @@ class UploadController
         $targetFile = $targetDir . $filename;
         $ok = true;
         $errors = [];
+
+        if ($_FILES['imageFile']['error'] !== 0) {
+            $message = $this->uploadErrors[$_FILES['imageFile']['error']];
+            return $this->view->render('error', compact('message'));
+        }
 
         if (isset($_POST['submit'])) {
             $size = getimagesize($_FILES['imageFile']['tmp_name']);
