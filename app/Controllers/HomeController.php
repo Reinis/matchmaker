@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use InvalidArgumentException;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Views\View;
 
@@ -26,7 +27,11 @@ class HomeController
         $image = null;
 
         if (isset($_SESSION['auth']['user'])) {
-            $image = htmlspecialchars('/static/images/' . $this->imageService->getProfilePic($_SESSION['auth']['user']));
+            try {
+                $image = htmlspecialchars('/static/images/' . $this->imageService->getProfilePic($_SESSION['auth']['user']));
+            } catch (InvalidArgumentException $e) {
+                header('Location: /logout');
+            }
         }
 
         return $this->view->render('home', compact('image'));
