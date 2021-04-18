@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+{% block title %}Image{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center">
+        <div class="w-64">
+            <img src="/static/images/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
+            <form action="/images/delete/{{ image.id }}" method="post" class="flex justify-between mt-4">
+                <input
+                        type="submit"
+                        name="back"
+                        formaction="/images"
+                        value="Back"
+                        class="btn-gray"
+                >
+                <input
+                        type="submit"
+                        name="submit"
+                        value="Delete"
+                        class="btn-gray"
+                >
+            </form>
+        </div>
+    </div>
+{% endblock %}

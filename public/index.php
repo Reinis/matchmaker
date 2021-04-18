@@ -14,6 +14,7 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
+use Matchmaker\Controllers\ImageController;
 use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\ImageRepository;
@@ -86,6 +87,9 @@ $container->add(UploadController::class)
     ->addArgument(View::class)
     ->addArgument(ImageService::class)
     ->addArgument(FinfoMimeTypeDetector::class);
+$container->add(ImageController::class)
+    ->addArgument(View::class)
+    ->addArgument(ImageService::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
@@ -99,6 +103,12 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute('GET', '/logout', [LoginController::class, 'logout']);
 
         $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
+
+        $r->addRoute(['GET', 'POST'], '/images', [ImageController::class, 'images']);
+
+        $r->addRoute('GET', '/images/{id:\d+}', [ImageController::class, 'image']);
+
+        $r->addRoute('POST', '/images/delete/{id:\d+}', [ImageController::class, 'deleteImage']);
     }
 );
 

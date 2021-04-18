@@ -9,6 +9,8 @@ namespace Matchmaker\Services;
 use Intervention\Image\ImageManager;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use Matchmaker\Entities\Collections\Images;
+use Matchmaker\Entities\Image;
 use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\UserRepository;
 
@@ -76,5 +78,20 @@ class ImageService
         $user = $this->userRepository->getUserByUsername($username);
 
         return $this->encodePath($user->getProfilePic());
+    }
+
+    public function getAllUserImages(string $username): Images
+    {
+        return $this->imageRepository->getAllUserImages($username);
+    }
+
+    public function getById(int $id): Image
+    {
+        return $this->imageRepository->getById($id);
+    }
+
+    public function delete(int $id): void
+    {
+        $this->imageRepository->delete($id);
     }
 }
