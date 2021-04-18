@@ -9,11 +9,11 @@ namespace Matchmaker\Controllers;
 use League\Flysystem\FilesystemException;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Services\ImageService;
-use Matchmaker\Views\View;
+use Matchmaker\Views\Flash;
+
 
 class UploadController
 {
-    private View $view;
     private ImageService $imageService;
     private FinfoMimeTypeDetector $mimeTypeDetector;
     /**
@@ -39,56 +39,42 @@ class UploadController
     ];
 
     public function __construct(
-        View $view,
         ImageService $imageService,
         FinfoMimeTypeDetector $mimeTypeDetector
     )
     {
-        $this->view = $view;
         $this->imageService = $imageService;
         $this->mimeTypeDetector = $mimeTypeDetector;
     }
 
-    public function upload(): string
+    public function upload(): void
     {
         $targetDir = __DIR__ . '/../../storage/uploads/';
         $filename = basename($_FILES['imageFile']['name']);
         $mimeType = $this->mimeTypeDetector->detectMimeTypeFromFile($_FILES['imageFile']['tmp_name']);
         $targetFile = $targetDir . $filename;
-        $ok = true;
-        $errors = [];
 
         if ($_FILES['imageFile']['error'] !== 0) {
-            $message = $this->uploadErrors[$_FILES['imageFile']['error']];
-            return $this->view->render('error', compact('message'));
+            flash($this->uploadErrors[$_FILES['imageFile']['error']], Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
         }
 
         if (isset($_POST['submit'])) {
             $size = getimagesize($_FILES['imageFile']['tmp_name']);
             if ($size === false) {
-                $ok = false;
-                $errors[] = "There is no file!";
+                flash("There is no file!", Flash::MESSAGE_CLASS_ERROR);
+                header('Location: /');
             }
         }
 
         if (file_exists($targetFile)) {
-            $ok = false;
-            $errors[] = "File already exists!";
-        }
-
-        if ($_FILES['imageFile']['size'] > 10_000_000) {
-            $ok = false;
-            $errors[] = "File too large!";
+            flash("File already exists!", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
         }
 
         if (!in_array($mimeType, $this->allowedTypes, true)) {
-            $ok = false;
-            $errors[] = "Image type '$mimeType' is not supported!";
-        }
-
-        if (!$ok) {
-            $message = "Failed to upload the file";
-            return $this->view->render('error', compact('message', 'errors'));
+            flash("Image type '$mimeType' is not supported!", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
         }
 
         try {
@@ -98,11 +84,11 @@ class UploadController
                 $_FILES['imageFile']['tmp_name'],
             );
         } catch (FilesystemException $e) {
-            $message = "Saving '$filename' failed";
-            return $this->view->render('error', compact('message'));
+            flash("Saving '$filename' failed", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
         }
 
-        $message = "File '" . htmlspecialchars($filename) . "' uploaded.";
-        return $this->view->render('success', compact('message'));
+        flash("File '" . htmlspecialchars($filename) . "' uploaded successfully", Flash::MESSAGE_CLASS_SUCCESS);
+        header('Location: /');
     }
 }

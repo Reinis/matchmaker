@@ -7,6 +7,7 @@ namespace Matchmaker\Controllers;
 
 
 use Matchmaker\Services\ImageService;
+use Matchmaker\Views\Flash;
 use Matchmaker\Views\View;
 
 
@@ -41,8 +42,8 @@ class ImageController
         $id = filter_var($vars['id'], FILTER_VALIDATE_INT);
 
         if (false === $id) {
-            $message = "Invalid operation";
-            return $this->view->render('error', compact('message'));
+            flash("Invalid operation", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /images');
         }
 
         $image = $this->imageService->getById($id);
@@ -50,7 +51,7 @@ class ImageController
         return $this->view->render('image', compact('image'));
     }
 
-    public function deleteImage(array $vars): string
+    public function deleteImage(array $vars): void
     {
         if (!isset($_SESSION['auth']['user'])) {
             header('Location: /login');
@@ -59,12 +60,13 @@ class ImageController
         $id = filter_var($vars['id'], FILTER_VALIDATE_INT);
 
         if (false === $id) {
-            $message = "Invalid operation";
-            return $this->view->render('error', compact('message'));
+            flash("Invalid operation", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /images');
         }
 
         $this->imageService->delete($id);
 
+        flash("Image deleted successfully", Flash::MESSAGE_CLASS_SUCCESS);
         header('Location: /images');
     }
 }

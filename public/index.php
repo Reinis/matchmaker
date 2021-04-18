@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once "../vendor/autoload.php";
+require_once "../app/helpers.php";
 
 
 use FastRoute\RouteCollector;
@@ -84,7 +85,6 @@ $container->add(LoginController::class)
     ->addArgument(View::class)
     ->addArgument(LoginService::class);
 $container->add(UploadController::class)
-    ->addArgument(View::class)
     ->addArgument(ImageService::class)
     ->addArgument(FinfoMimeTypeDetector::class);
 $container->add(ImageController::class)
@@ -135,4 +135,8 @@ switch ($routeInfo[0]) {
         $vars = $routeInfo[2];
         echo $container->get($class)->$method($vars);
         break;
+}
+
+if ('GET' === $httpMethod && isset($_SESSION['_flash'])) {
+    unset($_SESSION['_flash']);
 }

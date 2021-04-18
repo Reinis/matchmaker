@@ -28,6 +28,15 @@
         </div>
     </nav>
 </div>
+{% block flash %}
+    <div class="flex flex-col gap-4 mb-8">
+    {% for message in session._flash %}
+        <div class="flash {{ message.class }}">
+            {{ message.text }}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
 {% block content %}{% endblock %}
 </body>
 </html>
