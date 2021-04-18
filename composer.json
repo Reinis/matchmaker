@@ -11,7 +11,8 @@
         "psr-4": {
             "Matchmaker\\": "app/",
             "MatchmakerTests\\Unit\\": "tests/unit/",
-            "MatchmakerTests\\Integration\\": "tests/integration/"
+            "MatchmakerTests\\Integration\\": "tests/integration/",
+            "MatchmakerTests\\Acceptance\\": "tests/acceptance/"
         }
     },
     "require-dev": {

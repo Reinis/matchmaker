@@ -6,8 +6,13 @@
 
 actor: AcceptanceTester
 modules:
-    enabled:
-        - PhpBrowser:
-            url: http://localhost/myapp
-        - \Helper\Acceptance
-step_decorators: ~        
+  enabled:
+    - PhpBrowser:
+        url: http://localhost:8101
+    - Db:
+        dsn: "%MATCHMAKER_DB_DSN%"
+        user: "%MATCHMAKER_DB_USER%"
+        password: "%MATCHMAKER_DB_PASSWORD%"
+    - Asserts
+    - \Helper\Acceptance
+step_decorators: ~
