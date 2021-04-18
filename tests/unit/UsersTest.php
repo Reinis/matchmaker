@@ -19,8 +19,8 @@ class UsersTest extends Unit
     public function testNewUsers(): void
     {
         $users = new Users(
-            new User('John', 'Doe', 'male'),
-            new User('Jane', 'Snu', 'female'),
+            new User('Jonny', '***', 'John', 'Doe', 'male'),
+            new User('Jane', '****', 'Jane', 'Snu', 'female'),
         );
 
         self::assertCount(2, $users);

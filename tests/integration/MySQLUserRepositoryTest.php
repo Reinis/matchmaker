@@ -25,7 +25,7 @@ class MySQLUserRepositoryTest extends Unit
 
     public function testAddTransaction(): void
     {
-        $user = new User('John', 'Doe', 'male');
+        $user = new User('Jhonny', '***', 'John', 'Doe', 'male');
         $this->repository->create($user);
 
         $this->tester->seeInDatabase(
@@ -43,6 +43,8 @@ class MySQLUserRepositoryTest extends Unit
         $this->tester->haveInDatabase(
             'users',
             [
+                'username' => 'Jonny',
+                'secret' => '***',
                 'first_name' => 'John',
                 'last_name' => 'Doe',
                 'gender' => 'male'
@@ -51,6 +53,8 @@ class MySQLUserRepositoryTest extends Unit
         $this->tester->haveInDatabase(
             'users',
             [
+                'username' => 'Jane',
+                'secret' => '****',
                 'first_name' => 'Jane',
                 'last_name' => 'Snu',
                 'gender' => 'female'
@@ -74,6 +78,8 @@ class MySQLUserRepositoryTest extends Unit
         $this->tester->haveInDatabase(
             'users',
             [
+                'username' => 'Jonny',
+                'secret' => '***',
                 'first_name' => 'John',
                 'last_name' => 'Doe',
                 'gender' => 'male',
@@ -103,6 +109,8 @@ class MySQLUserRepositoryTest extends Unit
         $this->tester->haveInDatabase(
             'users',
             [
+                'username' => 'Jonny',
+                'secret' => '***',
                 'first_name' => 'John',
                 'last_name' => 'Doe',
                 'gender' => 'male',

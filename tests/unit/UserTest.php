@@ -18,6 +18,8 @@ class UserTest extends Unit
     public function testNewUser(): User
     {
         $user = new User(
+            'Jonny',
+            '***',
             'John',
             'Doe',
             'male',
