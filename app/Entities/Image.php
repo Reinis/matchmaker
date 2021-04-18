@@ -40,11 +40,6 @@ class Image
         return $this->originalName;
     }
 
-    public function getOriginalFileName(): string
-    {
-        return $this->originalFileName;
-    }
-
     public function getResizedFileLocation(): string
     {
         $name = $this->getResizedFileName();
@@ -75,5 +70,22 @@ class Image
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getOriginalFileLocation(): string
+    {
+        $name = $this->getOriginalFileName();
+
+        return sprintf(
+            "%s/%s/%s",
+            substr($name, 0, 2),
+            substr($name, 2, 2),
+            $name,
+        );
+    }
+
+    public function getOriginalFileName(): string
+    {
+        return $this->originalFileName;
     }
 }

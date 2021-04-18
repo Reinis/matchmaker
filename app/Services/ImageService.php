@@ -92,6 +92,27 @@ class ImageService
 
     public function delete(int $id): void
     {
+        $image = $this->imageRepository->getById($id);
+
+        $this->deleteAndClean($image->getResizedFileLocation());
+        $this->deleteAndClean($image->getOriginalFileLocation());
         $this->imageRepository->delete($id);
+    }
+
+    private function deleteAndClean(string $location): void
+    {
+        $this->filesystem->delete($location);
+
+        $location = substr($location, 0, 5);
+
+        if (0 === count($this->filesystem->listContents($location)->toArray())) {
+            $this->filesystem->deleteDirectory($location);
+        }
+
+        $location = substr($location, 0, 2);
+
+        if (0 === count($this->filesystem->listContents($location)->toArray())) {
+            $this->filesystem->deleteDirectory($location);
+        }
     }
 }

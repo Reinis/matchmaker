@@ -45,7 +45,7 @@ class ImageController
             return $this->view->render('error', compact('message'));
         }
 
-        $image = $this->imageService->getById($vars['id']);
+        $image = $this->imageService->getById($id);
 
         return $this->view->render('image', compact('image'));
     }

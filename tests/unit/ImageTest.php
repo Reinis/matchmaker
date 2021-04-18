@@ -43,4 +43,12 @@ class ImageTest extends Unit
     {
         self::assertEquals('en/co/encoded_sizexsize', $image->getResizedFileLocation());
     }
+
+    /**
+     * @depends testNewImage
+     */
+    public function testGetOriginalFileLocation(Image $image): void
+    {
+        self::assertEquals('en/co/encoded', $image->getOriginalFileLocation());
+    }
 }
