@@ -34,13 +34,15 @@ class LoginController
         $password = $_POST['password'] ?? '';
 
         if ($username === '' || $password === '') {
-            flash("Please provide a username an password", Flash::MESSAGE_CLASS_ERROR);
+            flash("Please provide a username and password", Flash::MESSAGE_CLASS_ERROR);
             header('Location: /login');
+            die();
         }
 
         if (!$this->loginService->verify($username, $password)) {
             flash("Login failed", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /login');
+            die();
         }
 
         $_SESSION['auth']['user'] = $username;

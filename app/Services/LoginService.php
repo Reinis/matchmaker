@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Services;
 
 
+use InvalidArgumentException;
 use Matchmaker\Entities\User;
 use Matchmaker\Repositories\UserRepository;
 use PDOException;
@@ -24,7 +25,11 @@ class LoginService
 
     public function verify($username, $password): bool
     {
-        $user = $this->userRepository->getUserByUsername($username);
+        try {
+            $user = $this->userRepository->getUserByUsername($username);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
 
         return password_verify($password, $user->getSecret());
     }
