@@ -98,4 +98,16 @@ class LoginController
 
         header('Location: /');
     }
+
+    public function deleteAccount(): void
+    {
+        if (!isset($_SESSION['auth']['user'])) {
+            header('Location: /login');
+        }
+
+        $username = $_SESSION['auth']['user'];
+
+        $this->loginService->deleteAccount($username);
+        header('location: /logout');
+    }
 }

@@ -14,10 +14,12 @@ use PDOException;
 class LoginService
 {
     private UserRepository $userRepository;
+    private ImageService $imageService;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, ImageService $imageService)
     {
         $this->userRepository = $userRepository;
+        $this->imageService = $imageService;
     }
 
     public function verify($username, $password): bool
@@ -36,5 +38,13 @@ class LoginService
         }
 
         return true;
+    }
+
+    public function deleteAccount(string $username): void
+    {
+        $user = $this->userRepository->getUserByUsername($username);
+
+        $this->imageService->deleteAllUserImages($user);
+        $this->userRepository->delete($user->getId());
     }
 }

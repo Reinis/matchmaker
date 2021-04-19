@@ -39,5 +39,26 @@ class RegisterCest
         $I->expectTo("be redirected to the front page");
         $I->seeCurrentUrlEquals('/');
         $I->see("Registration successful");
+
+        $I->amGoingTo("log in");
+        $I->click('Log In');
+        $I->fillField('username', 'go');
+        $I->fillField('password', 'test');
+        $I->click('Login');
+
+        $I->expectTo("be logged in");
+        $I->seeCurrentUrlEquals('/');
+        $I->dontSeeLink('Log In', '/login');
+        $I->seeLink('go', '/logout');
+
+        $I->amGoingTo("delete the user");
+        $sessionId = $I->grabCookie('PHPSESSID');
+        $I->amOnPage('/users/delete');
+
+        $I->expectTo("be logged out and have the user deleted");
+        $I->dontSeeInDatabase('users', ['username' => 'go']);
+        $I->assertNotEquals($sessionId, $I->grabCookie('PHPSESSID'));
+        $I->amOnPage('/');
+        $I->seeLink('Log In', '/login');
     }
 }

@@ -55,7 +55,8 @@ $container->add(ImageManager::class)
     );
 
 $container->add(LoginService::class)
-    ->addArgument(UserRepository::class);
+    ->addArgument(UserRepository::class)
+    ->addArgument(ImageService::class);
 $container->add(ImageService::class)
     ->addArgument(Filesystem::class)
     ->addArgument(ImageManager::class)
@@ -102,6 +103,8 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute('POST', '/register', [LoginController::class, 'register']);
 
         $r->addRoute('GET', '/logout', [LoginController::class, 'logout']);
+
+        $r->addRoute('GET', '/users/delete', [LoginController::class, 'deleteAccount']);
 
         $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
 
