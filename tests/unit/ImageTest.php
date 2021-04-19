@@ -20,6 +20,7 @@ class ImageTest extends Unit
     {
         $image = new Image(
             'Original Image.png',
+            'test',
             'encoded',
             'encoded_sizexsize',
             new DateTime('2021-01-01 12:34:56'),
@@ -28,6 +29,7 @@ class ImageTest extends Unit
 
         self::assertEquals(null, $image->getId());
         self::assertEquals('Original Image.png', $image->getOriginalName());
+        self::assertEquals('test', $image->getStorageLocation());
         self::assertEquals('encoded', $image->getOriginalFileName());
         self::assertEquals('encoded_sizexsize', $image->getResizedFileName());
         self::assertEquals(new DateTime('2021-01-01 12:34:56'), $image->getUploadTime());

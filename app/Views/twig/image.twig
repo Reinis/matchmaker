@@ -5,7 +5,7 @@
 {% block content %}
     <div class="flex justify-center">
         <div class="w-64">
-            <img src="/static/images/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
+            <img src="{{ image.imageDir }}/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
             <form action="/images/delete/{{ image.id }}" method="post" class="flex justify-between mt-4">
                 <a href="/images" class="btn-gray">Back</a>
                 <input

@@ -7,12 +7,14 @@ namespace Matchmaker\Entities;
 
 
 use DateTime;
+use Matchmaker\StorageMap;
 
 
 class Image
 {
     private ?int $id;
     private string $originalName;
+    private string $storageLocation;
     private string $originalFileName;
     private string $resizedFileName;
     private DateTime $uploadTime;
@@ -20,6 +22,7 @@ class Image
 
     public function __construct(
         string $originalName,
+        string $storageLocation,
         string $originalFileName,
         string $resizedFileName,
         DateTime $uploadTime,
@@ -29,6 +32,7 @@ class Image
     {
         $this->id = $id;
         $this->originalName = $originalName;
+        $this->storageLocation = $storageLocation;
         $this->originalFileName = $originalFileName;
         $this->resizedFileName = $resizedFileName;
         $this->uploadTime = $uploadTime;
@@ -87,5 +91,15 @@ class Image
     public function getOriginalFileName(): string
     {
         return $this->originalFileName;
+    }
+
+    public function getStorageLocation(): string
+    {
+        return $this->storageLocation;
+    }
+
+    public function getImageDir(): string
+    {
+        return StorageMap::getImageDir($this->getStorageLocation());
     }
 }

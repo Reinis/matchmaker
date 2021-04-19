@@ -12,7 +12,7 @@ use Matchmaker\Entities\Image;
 
 interface ImageRepository
 {
-    public function save(string $originalName, string $originalFile, string $resizedFile, int $userId): void;
+    public function save(Image $image): void;
 
     public function getAllUserImages(string $username): Images;
 

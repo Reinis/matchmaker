@@ -24,6 +24,7 @@ use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Services\LoginService;
+use Matchmaker\StorageMap;
 use Matchmaker\Views\TwigView;
 use Matchmaker\Views\View;
 use Twig\Environment;
@@ -42,8 +43,12 @@ $container->add(UserRepository::class, MySQLUserRepository::class)
 $container->add(ImageRepository::class, MySQLImageRepository::class)
     ->addArgument(Config::class);
 
-$container->add(FilesystemAdapter::class, LocalFilesystemAdapter::class)
-    ->addArgument(__DIR__ . '/../storage/uploads');
+try {
+    $container->add(FilesystemAdapter::class, LocalFilesystemAdapter::class)
+        ->addArgument(StorageMap::getPath($container->get(Config::class)->getStorageLocation()));
+} catch (TypeError $e) {
+    throw new RuntimeException("Internal server error");
+}
 $container->add(Filesystem::class)
     ->addArgument(FilesystemAdapter::class);
 
@@ -58,6 +63,7 @@ $container->add(LoginService::class)
     ->addArgument(UserRepository::class)
     ->addArgument(ImageService::class);
 $container->add(ImageService::class)
+    ->addArgument(Config::class)
     ->addArgument(Filesystem::class)
     ->addArgument(ImageManager::class)
     ->addArgument(UserRepository::class)

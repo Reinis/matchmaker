@@ -14,17 +14,18 @@ use Matchmaker\Entities\Image;
 
 class MySQLImageRepository extends MySQLRepository implements ImageRepository
 {
-    public function save(string $originalName, string $originalFile, string $resizedFile, int $userId): void
+    public function save(Image $image): void
     {
-        $sql = "insert into `pictures` (original_name, original_file, resized_file, upload_time, user_id) values (?, ?, ?, ?, ?);";
+        $sql = "insert into `pictures` (original_name, storage, original_file, resized_file, upload_time, user_id) values (?, ?, ?, ?, ?, ?);";
         $statement = $this->connection->prepare($sql);
         $statement->execute(
             [
-                $originalName,
-                $originalFile,
-                $resizedFile,
-                (new DateTime('now'))->format('Y-m-d H:i:s'),
-                $userId,
+                $image->getOriginalName(),
+                $image->getStorageLocation(),
+                $image->getOriginalFileName(),
+                $image->getResizedFileName(),
+                $image->getUploadTime()->format('Y-m-d H:i:s'),
+                $image->getUserId(),
             ]
         );
     }
@@ -53,6 +54,7 @@ class MySQLImageRepository extends MySQLRepository implements ImageRepository
             $users->add(
                 new Image(
                     $result->original_name,
+                    $result->storage,
                     $result->original_file,
                     $result->resized_file,
                     new DateTime($result->upload_time),
@@ -85,6 +87,7 @@ class MySQLImageRepository extends MySQLRepository implements ImageRepository
 
         return new Image(
             $result->original_name,
+            $result->storage,
             $result->original_file,
             $result->resized_file,
             new DateTime($result->upload_time),

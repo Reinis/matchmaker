@@ -11,6 +11,7 @@ use League\Flysystem\FilesystemException;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Views\Flash;
+use PDOException;
 
 
 class UploadController
@@ -84,11 +85,8 @@ class UploadController
                 $filename,
                 $_FILES['imageFile']['tmp_name'],
             );
-        } catch (FilesystemException $e) {
-            flash("Saving '$filename' failed", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /images');
-        } catch (NotSupportedException $e) {
-            flash("Internal server error: Saving file failed", Flash::MESSAGE_CLASS_ERROR);
+        } catch (PDOException | FilesystemException | NotSupportedException $e) {
+            flash("Uploading '$filename' failed", Flash::MESSAGE_CLASS_ERROR);
             header('Location: /images');
             die();
         }

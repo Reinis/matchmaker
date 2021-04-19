@@ -20,8 +20,8 @@ class ImagesTest extends Unit
     public function testNewUsers(): void
     {
         $images = new Images(
-            new Image('orig.png', 'abc', 'abc_4x4', new DateTime('2021-01-01 12:34:45'), 1),
-            new Image('orig2.png', 'def', 'def_4x4', new DateTime('2021-01-01 12:34:45'), 2),
+            new Image('orig.png', 'test', 'abc', 'abc_4x4', new DateTime('2021-01-01 12:34:45'), 1),
+            new Image('orig2.png', 'test', 'def', 'def_4x4', new DateTime('2021-01-01 12:34:45'), 2),
         );
 
         self::assertCount(2, $images);

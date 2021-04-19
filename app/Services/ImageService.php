@@ -6,30 +6,37 @@ declare(strict_types=1);
 namespace Matchmaker\Services;
 
 
+use DateTime;
 use Intervention\Image\ImageManager;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use Matchmaker\Config;
 use Matchmaker\Entities\Collections\Images;
 use Matchmaker\Entities\Image;
 use Matchmaker\Entities\User;
 use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\UserRepository;
+use Matchmaker\Views\Flash;
+use PDOException;
 
 
 class ImageService
 {
+    private Config $config;
     private Filesystem $filesystem;
     private ImageManager $imageManager;
     private UserRepository $userRepository;
     private ImageRepository $imageRepository;
 
     public function __construct(
+        Config $config,
         Filesystem $filesystem,
         ImageManager $imageManager,
         UserRepository $userRepository,
         ImageRepository $imageRepository
     )
     {
+        $this->config = $config;
         $this->filesystem = $filesystem;
         $this->imageManager = $imageManager;
         $this->userRepository = $userRepository;
@@ -53,7 +60,23 @@ class ImageService
             ->encode();
         $this->filesystem->writeStream($this->encodePath($encodedResizedName), $image->stream()->detach());
 
-        $this->imageRepository->save($originalFilename, $encodedName, $encodedResizedName, $user->getId());
+        $imagePDO = new Image(
+            $originalFilename,
+            $this->config->getStorageLocation(),
+            $encodedName,
+            $encodedResizedName,
+            new DateTime('now'),
+            $user->getId(),
+        );
+
+        try {
+            $this->imageRepository->save($imagePDO);
+        } catch (PDOException $e) {
+            $this->deleteAndClean($this->encodePath($encodedName));
+            $this->deleteAndClean($this->encodePath($encodedResizedName));
+            throw $e;
+        }
+
         $user->setProfilePic($encodedResizedName);
 
         $this->userRepository->update($user);
