@@ -7,13 +7,7 @@
         <div class="w-64">
             <img src="/static/images/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
             <form action="/images/delete/{{ image.id }}" method="post" class="flex justify-between mt-4">
-                <input
-                        type="submit"
-                        name="back"
-                        formaction="/images"
-                        value="Back"
-                        class="btn-gray"
-                >
+                <a href="/images" class="btn-gray">Back</a>
                 <input
                         type="submit"
                         name="submit"
