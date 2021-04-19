@@ -40,6 +40,7 @@ class UploadCest
         $I->seeLink('go', '/logout');
 
         $I->amGoingTo("upload a picture");
+        $I->amOnPage('/images');
         $I->attachFile('imageFile', '../../storage/assets/Personality Pack PNG/Andy.png');
         $I->click('Upload Image');
 

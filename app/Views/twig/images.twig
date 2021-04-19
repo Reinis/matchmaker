@@ -3,7 +3,13 @@
 {% block title %}Images{% endblock %}
 
 {% block content %}
-    <div class="flex gap-8">
+    <div class="flex justify-center">
+        <form action="/upload" method="post" enctype="multipart/form-data" class="flex flex-col gap-8">
+            <input type="file" name="imageFile" id="imageFile">
+            <input type="submit" value="Upload Image" name="submit" class="btn-gray w-48 hover:bg-gray-200">
+        </form>
+    </div>
+    <div class="flex gap-8 m-4">
         {% for image in images %}
             <div class="w-32 h-32">
                 <a href="/images/{{ image.id }}">

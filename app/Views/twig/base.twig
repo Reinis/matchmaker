@@ -19,23 +19,25 @@
                 <a href="/images">Images</a>
             </div>
             <div class="underline">
-            {% if session.auth.user %}
-                <a href="/logout">{{ session.auth.user }}</a>
-            {% else %}
-                <a href="/login">Log In</a>
-            {% endif %}
+                {% if session.auth.user %}
+                    <a href="/logout">{{ session.auth.user }}</a>
+                {% else %}
+                    <a href="/login">Log In</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 </div>
 {% block flash %}
-    <div class="flex flex-col gap-4 mb-8">
-    {% for message in session._flash %}
-        <div class="flash {{ message.class }}">
-            {{ message.text }}
+    {% if session._flash %}
+        <div class="flex flex-col gap-4 mb-8">
+            {% for message in session._flash %}
+                <div class="flash {{ message.class }}">
+                    {{ message.text }}
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    </div>
+    {% endif %}
 {% endblock %}
 {% block content %}{% endblock %}
 </body>

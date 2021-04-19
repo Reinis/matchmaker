@@ -57,25 +57,25 @@ class UploadController
 
         if ($_FILES['imageFile']['error'] !== 0) {
             flash($this->uploadErrors[$_FILES['imageFile']['error']], Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /images');
         }
 
         if (isset($_POST['submit'])) {
             $size = getimagesize($_FILES['imageFile']['tmp_name']);
             if ($size === false) {
                 flash("There is no file!", Flash::MESSAGE_CLASS_ERROR);
-                header('Location: /');
+                header('Location: /images');
             }
         }
 
         if (file_exists($targetFile)) {
             flash("File already exists!", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /images');
         }
 
         if (!in_array($mimeType, $this->allowedTypes, true)) {
             flash("Image type '$mimeType' is not supported!", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /images');
         }
 
         try {
@@ -86,14 +86,14 @@ class UploadController
             );
         } catch (FilesystemException $e) {
             flash("Saving '$filename' failed", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /images');
         } catch (NotSupportedException $e) {
             flash("Internal server error: Saving file failed", Flash::MESSAGE_CLASS_ERROR);
-            header('Location: /');
+            header('Location: /images');
             die();
         }
 
         flash("File '" . htmlspecialchars($filename) . "' uploaded successfully", Flash::MESSAGE_CLASS_SUCCESS);
-        header('Location: /');
+        header('Location: /images');
     }
 }
