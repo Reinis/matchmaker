@@ -98,6 +98,7 @@ $dispatcher = FastRoute\simpleDispatcher(
 
         $r->addRoute('GET', '/login', [LoginController::class, 'login']);
         $r->addRoute('POST', '/login', [LoginController::class, 'authenticate']);
+        $r->addRoute('GET', '/register', [LoginController::class, 'registration']);
         $r->addRoute('POST', '/register', [LoginController::class, 'register']);
 
         $r->addRoute('GET', '/logout', [LoginController::class, 'logout']);

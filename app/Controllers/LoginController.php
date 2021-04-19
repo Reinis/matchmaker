@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use Matchmaker\Entities\User;
 use Matchmaker\Services\LoginService;
 use Matchmaker\Views\Flash;
 use Matchmaker\Views\View;
@@ -47,21 +48,43 @@ class LoginController
         header('Location: /');
     }
 
+    public function registration(): string
+    {
+        return $this->view->render('register');
+    }
+
     public function register(): void
     {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
+        $firstName = $_POST['first_name'] ?? '';
+        $lastName = $_POST['last_name'] ?? '';
+        $gender = $_POST['gender'] ?? 'Unknown';
 
         if ($username === '' || $password === '') {
             flash("Please provide a username an password", Flash::MESSAGE_CLASS_ERROR);
             header('Location: /login');
         }
 
-        if (!$this->loginService->new($username, $password)) {
+        if (!in_array($gender, ['Unknown', 'male', 'female'])) {
+            flash("Invalid value for gender", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /register');
+        }
+
+        $user = new User(
+            $username,
+            password_hash($password, PASSWORD_DEFAULT),
+            $firstName,
+            $lastName,
+            $gender
+        );
+
+        if (!$this->loginService->new($user)) {
             flash("Failed to create a new user", Flash::MESSAGE_CLASS_ERROR);
             header('Location: /login');
         }
 
+        flash("Registration successful", Flash::MESSAGE_CLASS_SUCCESS);
         header('Location: /');
     }
 

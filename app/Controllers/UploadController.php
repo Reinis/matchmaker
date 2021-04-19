@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Matchmaker\Controllers;
 
 
+use Intervention\Image\Exception\NotSupportedException;
 use League\Flysystem\FilesystemException;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Services\ImageService;
@@ -86,6 +87,10 @@ class UploadController
         } catch (FilesystemException $e) {
             flash("Saving '$filename' failed", Flash::MESSAGE_CLASS_ERROR);
             header('Location: /');
+        } catch (NotSupportedException $e) {
+            flash("Internal server error: Saving file failed", Flash::MESSAGE_CLASS_ERROR);
+            header('Location: /');
+            die();
         }
 
         flash("File '" . htmlspecialchars($filename) . "' uploaded successfully", Flash::MESSAGE_CLASS_SUCCESS);

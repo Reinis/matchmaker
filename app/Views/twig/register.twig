@@ -1,0 +1,36 @@
+{% extends "base.twig" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="flex justify-center">
+    <form action="/register" method="post">
+        <h1 class="text-2xl font-bold text-center mb-4">Register</h1>
+        <div class="flex flex-col text-xl inputs">
+            <label for="username" class="font-bold">Username</label>
+            <input type="text" name="username" id="username">
+            <label for="password" class="font-bold">Password</label>
+            <input type="password" name="password" id="password">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender" class="rounded">
+                <option value="Unknown">unknown</option>
+                <option value="male">male</option>
+                <option value="female">female</option>
+            </select>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+            <a href="/login" class="btn-gray">Back</a>
+            <input
+                    type="submit"
+                    name="register"
+                    value="Register"
+                    class="btn-gray"
+            >
+        </div>
+    </form>
+</div>
+{% endblock %}

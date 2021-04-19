@@ -27,16 +27,8 @@ class LoginService
         return password_verify($password, $user->getSecret());
     }
 
-    public function new(string $username, string $password): bool
+    public function new(User $user): bool
     {
-        $user = new User(
-            $username,
-            password_hash($password, PASSWORD_DEFAULT),
-            'Fnu',
-            'Lnu',
-            'Unknown'
-        );
-
         try {
             $this->userRepository->create($user);
         } catch (PDOException $e) {
