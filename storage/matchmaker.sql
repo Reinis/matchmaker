@@ -31,15 +31,6 @@ CREATE TABLE `favorites` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `favorites`
---
-
-LOCK TABLES `favorites` WRITE;
-/*!40000 ALTER TABLE `favorites` DISABLE KEYS */;
-/*!40000 ALTER TABLE `favorites` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `pictures`
 --
 
@@ -48,21 +39,18 @@ DROP TABLE IF EXISTS `pictures`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pictures` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `original_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `storage` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `original_file` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `resized_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `upload_time` datetime DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `picture_file_name_idx` (`file_name`)
+  UNIQUE KEY `picture_file_name_idx` (`original_file`),
+  KEY `fk_user_id` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pictures`
---
-
-LOCK TABLES `pictures` WRITE;
-/*!40000 ALTER TABLE `pictures` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pictures` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -73,22 +61,18 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `gender` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Unknown',
-  `profile_pic` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Default',
-  PRIMARY KEY (`id`)
+  `profile_pic` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_idx` (`username`),
+  KEY `fk_picture_id` (`profile_pic`),
+  CONSTRAINT `fk_picture_id` FOREIGN KEY (`profile_pic`) REFERENCES `pictures` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -99,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-16 11:25:17
+-- Dump completed
