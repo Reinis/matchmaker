@@ -13,9 +13,10 @@
     {% endif %}
     {% if session.auth.user %}
         <div>
+            {% set image = user.profilePic %}
             {% if image %}
                 <div class="flex justify-center">
-                    <img src="{{ image.imageDir }}/{{ image.resizedFileLocation }}" alt="image">
+                    <img src="{{ image.resizedImageExtendedPath }}" alt="image">
                 </div>
             {% endif %}
         </div>

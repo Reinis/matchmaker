@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="mb-8">
-    <nav class="flex justify-between p-2 bg-gray-400">
+    <nav class="flex justify-between items-baseline p-2 bg-gray-400">
         <div class="text-4xl font-bold">
             <a href="/">Matchmaker</a>
         </div>
@@ -18,10 +18,15 @@
             <div>
                 <a href="/images">Images</a>
             </div>
-            <div class="underline">
+            <div class="underline flex">
                 {% if session.auth.user %}
-                    <a href="/logout">{{ session.auth.user }}</a>
-                    <a href="/profile" class="mx-4">Profile</a>
+                    <a href="/profile" class="mx-4 text-sm flex">
+                        <img
+                                src="{{ user.profilePic.resizedImageExtendedPath }}"
+                                alt="Profile"
+                                class="avatar"
+                        >
+                    </a>
                 {% else %}
                     <a href="/login">Log In</a>
                 {% endif %}

@@ -129,10 +129,12 @@ class LoginCest
         $I->expectTo("be logged in on the home page");
         $I->seeCurrentUrlEquals('/');
         $I->dontSeeLink('Log In');
-        $I->seeLink('go', '/logout');
+        $I->seeLink('Profile', '/profile');
 
         $I->expectTo("be able to log out");
-        $I->click('go');
+        $I->click('Profile');
+        $I->seeLink('Logout', '/logout');
+        $I->click('Logout');
 
         $I->expectTo("be logged out");
         $I->seeCurrentUrlEquals('/');

@@ -104,6 +104,7 @@ $container->add(UploadController::class)
     ->addArgument(FinfoMimeTypeDetector::class);
 $container->add(ImageController::class)
     ->addArgument(View::class)
+    ->addArgument(ProfileService::class)
     ->addArgument(ImageService::class);
 $container->add(ProfileController::class)
     ->addArgument(View::class)

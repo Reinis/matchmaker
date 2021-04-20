@@ -49,11 +49,10 @@ class RegisterCest
         $I->expectTo("be logged in");
         $I->seeCurrentUrlEquals('/');
         $I->dontSeeLink('Log In', '/login');
-        $I->seeLink('go', '/logout');
+        $I->seeLink('Profile', '/profile');
 
         $I->amGoingTo("delete the user");
         $sessionId = $I->grabCookie('PHPSESSID');
-        $I->seeLink('Profile', '/profile');
         $I->click('Profile');
         $I->seeCurrentUrlEquals('/profile');
         $I->seeElement(

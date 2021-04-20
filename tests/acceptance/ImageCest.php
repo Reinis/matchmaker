@@ -30,7 +30,7 @@ class ImageCest
         $I->click('Login');
 
         $I->expectTo("succeed");
-        $I->seeLink('go', '/logout');
+        $I->seeLink('Profile', '/profile');
 
         $I->amGoingTo("upload an image");
         $I->amOnPage('/images');

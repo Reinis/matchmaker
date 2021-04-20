@@ -22,6 +22,10 @@
     @apply rounded
 }
 
+.avatar {
+    @apply rounded-full w-8
+}
+
 .flash {
     @apply text-2xl p-4 mx-4 rounded
 }

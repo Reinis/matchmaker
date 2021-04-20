@@ -7,6 +7,7 @@ namespace Matchmaker\Controllers;
 
 
 use Matchmaker\Services\ImageService;
+use Matchmaker\Services\ProfileService;
 use Matchmaker\Views\Flash;
 use Matchmaker\Views\View;
 
@@ -14,11 +15,13 @@ use Matchmaker\Views\View;
 class ImageController
 {
     private View $view;
+    private ProfileService $profileService;
     private ImageService $imageService;
 
-    public function __construct(View $view, ImageService $imageService)
+    public function __construct(View $view, ProfileService $profileService, ImageService $imageService)
     {
         $this->view = $view;
+        $this->profileService = $profileService;
         $this->imageService = $imageService;
     }
 
@@ -28,9 +31,11 @@ class ImageController
             header('Location: /login');
         }
 
-        $images = $this->imageService->getAllUserImages($_SESSION['auth']['user']);
+        $username = $_SESSION['auth']['user'];
+        $user = $this->profileService->getUser($username);
+        $images = $this->imageService->getAllUserImages($username);
 
-        return $this->view->render('images', compact('images'));
+        return $this->view->render('images', compact('user', 'images'));
     }
 
     public function image(array $vars): string
@@ -46,9 +51,11 @@ class ImageController
             header('Location: /images');
         }
 
+        $username = $_SESSION['auth']['user'];
+        $user = $this->profileService->getUser($username);
         $image = $this->imageService->getById($id);
 
-        return $this->view->render('image', compact('image'));
+        return $this->view->render('image', compact('user', 'image'));
     }
 
     public function deleteImage(array $vars): void

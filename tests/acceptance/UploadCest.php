@@ -36,7 +36,7 @@ class UploadCest
     {
         $I->amOnPage('/');
         $I->dontSeeLink('Log In', '/login');
-        $I->seeLink('go', '/logout');
+        $I->seeLink('Profile', '/profile');
 
         $I->amGoingTo("upload a picture");
         $I->amOnPage('/images');
