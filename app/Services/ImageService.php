@@ -69,7 +69,7 @@ class ImageService
         );
 
         try {
-            $this->imageRepository->save($imagePDO);
+            $this->imageRepository->create($imagePDO);
         } catch (PDOException $e) {
             $this->deleteAndClean($this->encodePath($encodedName));
             $this->deleteAndClean($this->encodePath($encodedResizedName));

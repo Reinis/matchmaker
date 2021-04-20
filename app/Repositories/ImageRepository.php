@@ -12,7 +12,7 @@ use Matchmaker\Entities\Image;
 
 interface ImageRepository
 {
-    public function save(Image $image): void;
+    public function create(Image $image): void;
 
     public function getAllUserImages(string $username): Images;
 

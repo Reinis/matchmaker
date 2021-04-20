@@ -14,7 +14,7 @@ use Matchmaker\Entities\Image;
 
 class MySQLImageRepository extends MySQLRepository implements ImageRepository
 {
-    public function save(Image $image): void
+    public function create(Image $image): void
     {
         $sql = "insert into `pictures` (original_name, storage, original_file, resized_file, upload_time, user_id) values (?, ?, ?, ?, ?, ?);";
         $statement = $this->connection->prepare($sql);

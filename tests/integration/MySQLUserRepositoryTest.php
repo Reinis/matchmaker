@@ -23,7 +23,7 @@ class MySQLUserRepositoryTest extends Unit
     private ?MySQLUserRepository $repository = null;
     private ?PDO $connection = null;
 
-    public function testAddTransaction(): void
+    public function testAdd(): void
     {
         $user = new User('Jhonny', '***', 'John', 'Doe', 'male');
         $this->repository->create($user);
