@@ -19,6 +19,7 @@ use Matchmaker\Controllers\ImageController;
 use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\ProfileController;
 use Matchmaker\Controllers\UploadController;
+use Matchmaker\Repositories\FilesystemRepository;
 use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\MySQLImageRepository;
 use Matchmaker\Repositories\MySQLUserRepository;
@@ -53,6 +54,8 @@ try {
 }
 $container->add(Filesystem::class)
     ->addArgument(FilesystemAdapter::class);
+$container->add(FilesystemRepository::class)
+    ->addArgument(Filesystem::class);
 
 $container->add(ImageManager::class)
     ->addArgument(
@@ -66,10 +69,10 @@ $container->add(LoginService::class)
     ->addArgument(ImageService::class);
 $container->add(ImageService::class)
     ->addArgument(Config::class)
-    ->addArgument(Filesystem::class)
     ->addArgument(ImageManager::class)
     ->addArgument(UserRepository::class)
-    ->addArgument(ImageRepository::class);
+    ->addArgument(ImageRepository::class)
+    ->addArgument(FilesystemRepository::class);
 $container->add(ProfileService::class)
     ->addArgument(UserRepository::class)
     ->addArgument(ImageService::class);
