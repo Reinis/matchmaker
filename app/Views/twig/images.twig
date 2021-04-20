@@ -13,7 +13,7 @@
         {% for image in images %}
             <div class="w-32 h-32">
                 <a href="/images/{{ image.id }}">
-                    <img src="{{ image.imageDir }}/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
+                    <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
                 </a>
             </div>
         {% endfor %}

@@ -69,7 +69,7 @@ class MySQLUserRepositoryTest extends Unit
             self::assertContainsEquals($user->getFirstName(), ['John', 'Jane']);
             self::assertContainsEquals($user->getLastName(), ['Doe', 'Snu']);
             self::assertContainsEquals($user->getGender(), ['male', 'female']);
-            self::assertContainsEquals($user->getProfilePic(), ['Default']);
+            self::assertContainsEquals($user->getProfilePic(), [null]);
         }
     }
 

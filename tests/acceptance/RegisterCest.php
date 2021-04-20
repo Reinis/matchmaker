@@ -53,12 +53,23 @@ class RegisterCest
 
         $I->amGoingTo("delete the user");
         $sessionId = $I->grabCookie('PHPSESSID');
-        $I->amOnPage('/users/delete');
+        $I->seeLink('Profile', '/profile');
+        $I->click('Profile');
+        $I->seeCurrentUrlEquals('/profile');
+        $I->seeElement(
+            'form[action="/users/delete"] > input',
+            [
+                'type' => 'submit',
+                'name' => 'delete_account',
+                'value' => 'Delete Account',
+            ]
+        );
+        $I->click('Delete Account');
 
         $I->expectTo("be logged out and have the user deleted");
         $I->dontSeeInDatabase('users', ['username' => 'go']);
         $I->assertNotEquals($sessionId, $I->grabCookie('PHPSESSID'));
-        $I->amOnPage('/');
+        $I->seeCurrentUrlEquals('/');
         $I->seeLink('Log In', '/login');
     }
 }

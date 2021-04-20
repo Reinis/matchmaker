@@ -17,6 +17,7 @@ use Matchmaker\Config;
 use Matchmaker\Controllers\HomeController;
 use Matchmaker\Controllers\ImageController;
 use Matchmaker\Controllers\LoginController;
+use Matchmaker\Controllers\ProfileController;
 use Matchmaker\Controllers\UploadController;
 use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\MySQLImageRepository;
@@ -24,6 +25,7 @@ use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Services\LoginService;
+use Matchmaker\Services\ProfileService;
 use Matchmaker\StorageMap;
 use Matchmaker\Views\TwigView;
 use Matchmaker\Views\View;
@@ -68,6 +70,9 @@ $container->add(ImageService::class)
     ->addArgument(ImageManager::class)
     ->addArgument(UserRepository::class)
     ->addArgument(ImageRepository::class);
+$container->add(ProfileService::class)
+    ->addArgument(UserRepository::class)
+    ->addArgument(ImageService::class);
 
 $container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
@@ -87,7 +92,7 @@ $container->add(FinfoMimeTypeDetector::class);
 
 $container->add(HomeController::class)
     ->addArgument(View::class)
-    ->addArgument(ImageService::class);
+    ->addArgument(ProfileService::class);
 $container->add(LoginController::class)
     ->addArgument(View::class)
     ->addArgument(LoginService::class);
@@ -97,6 +102,9 @@ $container->add(UploadController::class)
 $container->add(ImageController::class)
     ->addArgument(View::class)
     ->addArgument(ImageService::class);
+$container->add(ProfileController::class)
+    ->addArgument(View::class)
+    ->addArgument(ProfileService::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
@@ -108,9 +116,12 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute('GET', '/register', [LoginController::class, 'registration']);
         $r->addRoute('POST', '/register', [LoginController::class, 'register']);
 
+        $r->addRoute('GET', '/profile', [ProfileController::class, 'profile']);
+        $r->addRoute('POST', '/profile/image', [ProfileController::class, 'setPicture']);
+
         $r->addRoute('GET', '/logout', [LoginController::class, 'logout']);
 
-        $r->addRoute('GET', '/users/delete', [LoginController::class, 'deleteAccount']);
+        $r->addRoute('POST', '/users/delete', [LoginController::class, 'deleteAccount']);
 
         $r->addRoute('POST', '/upload', [UploadController::class, 'upload']);
 

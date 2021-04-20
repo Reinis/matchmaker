@@ -7,33 +7,34 @@ namespace Matchmaker\Controllers;
 
 
 use InvalidArgumentException;
-use Matchmaker\Services\ImageService;
+use Matchmaker\Services\ProfileService;
 use Matchmaker\Views\View;
 
 
 class HomeController
 {
     private View $view;
-    private ImageService $imageService;
+    private ProfileService $profileService;
 
-    public function __construct(View $view, ImageService $imageService)
+    public function __construct(View $view, ProfileService $profileService)
     {
         $this->view = $view;
-        $this->imageService = $imageService;
+        $this->profileService = $profileService;
     }
 
     public function index(): string
     {
-        $image = null;
+        $user = null;
 
         if (isset($_SESSION['auth']['user'])) {
             try {
-                $image = htmlspecialchars('/static/images/' . $this->imageService->getProfilePic($_SESSION['auth']['user']));
+                $user = $this->profileService->getUser($_SESSION['auth']['user']);
             } catch (InvalidArgumentException $e) {
                 header('Location: /logout');
+                die();
             }
         }
 
-        return $this->view->render('home', compact('image'));
+        return $this->view->render('home', compact('user'));
     }
 }

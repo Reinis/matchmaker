@@ -5,14 +5,22 @@
 {% block content %}
     <div class="flex justify-center">
         <div class="w-64">
-            <img src="{{ image.imageDir }}/{{ image.resizedFileLocation }}" alt="{{ image.originalName }}">
-            <form action="/images/delete/{{ image.id }}" method="post" class="flex justify-between mt-4">
+            <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
+            <form action="/images/delete/{{ image.id }}" method="post" class="grid grid-cols-2 gap-2 justify-between mt-4">
+                <input type="hidden" name="image_id" value="{{ image.id }}">
                 <a href="/images" class="btn-gray">Back</a>
                 <input
                         type="submit"
                         name="submit"
                         value="Delete"
-                        class="btn-gray"
+                        class="btn-red justify-self-end"
+                >
+                <input
+                        type="submit"
+                        name="set_profile_pic"
+                        value="Set Profile"
+                        formaction="/profile/image"
+                        class="btn-green w-32 col-span-2 justify-self-center"
                 >
             </form>
         </div>

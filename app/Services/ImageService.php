@@ -16,7 +16,6 @@ use Matchmaker\Entities\Image;
 use Matchmaker\Entities\User;
 use Matchmaker\Repositories\ImageRepository;
 use Matchmaker\Repositories\UserRepository;
-use Matchmaker\Views\Flash;
 use PDOException;
 
 
@@ -76,10 +75,6 @@ class ImageService
             $this->deleteAndClean($this->encodePath($encodedResizedName));
             throw $e;
         }
-
-        $user->setProfilePic($encodedResizedName);
-
-        $this->userRepository->update($user);
     }
 
     private function encodeFilename(string $username, string $originalFilename): string
@@ -97,11 +92,21 @@ class ImageService
         );
     }
 
-    public function getProfilePic(string $username): string
+    private function deleteAndClean(string $location): void
     {
-        $user = $this->userRepository->getUserByUsername($username);
+        $this->filesystem->delete($location);
 
-        return $this->encodePath($user->getProfilePic());
+        $location = substr($location, 0, 5);
+
+        if (0 === count($this->filesystem->listContents($location)->toArray())) {
+            $this->filesystem->deleteDirectory($location);
+        }
+
+        $location = substr($location, 0, 2);
+
+        if (0 === count($this->filesystem->listContents($location)->toArray())) {
+            $this->filesystem->deleteDirectory($location);
+        }
     }
 
     public function getById(int $id): Image
@@ -127,25 +132,8 @@ class ImageService
     {
         $image = $this->imageRepository->getById($id);
 
-        $this->deleteAndClean($image->getResizedFileLocation());
-        $this->deleteAndClean($image->getOriginalFileLocation());
+        $this->deleteAndClean($image->getResizedFilePath());
+        $this->deleteAndClean($image->getOriginalFilePath());
         $this->imageRepository->delete($id);
-    }
-
-    private function deleteAndClean(string $location): void
-    {
-        $this->filesystem->delete($location);
-
-        $location = substr($location, 0, 5);
-
-        if (0 === count($this->filesystem->listContents($location)->toArray())) {
-            $this->filesystem->deleteDirectory($location);
-        }
-
-        $location = substr($location, 0, 2);
-
-        if (0 === count($this->filesystem->listContents($location)->toArray())) {
-            $this->filesystem->deleteDirectory($location);
-        }
     }
 }

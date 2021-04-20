@@ -1,0 +1,21 @@
+{% extends "base.twig" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    {% set image = user.profilePic %}
+    <div class="grid justify-center">
+        <div class="w-64">
+            <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
+        </div>
+        <div class="grid grid-cols-2 gap-2 justify-center fields">
+            <div>Username:</div>
+            <div>{{ user.username }}</div>
+            <div>Name:</div>
+            <div>{{ user.name }}</div>
+        </div>
+        <form action="/users/delete" method="post">
+            <input type="submit" name="delete_account" value="Delete Account" class="btn-gray w-64 mt-8">
+        </form>
+    </div>
+{% endblock %}

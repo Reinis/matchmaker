@@ -21,6 +21,7 @@
             <div class="underline">
                 {% if session.auth.user %}
                     <a href="/logout">{{ session.auth.user }}</a>
+                    <a href="/profile" class="mx-4">Profile</a>
                 {% else %}
                     <a href="/login">Log In</a>
                 {% endif %}

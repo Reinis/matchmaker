@@ -7,7 +7,6 @@ namespace MatchmakerTests\Acceptance;
 
 
 use AcceptanceTester;
-use Matchmaker\Controllers\LoginController;
 
 
 class UploadCest
@@ -53,7 +52,7 @@ class UploadCest
     public function _after(AcceptanceTester $I): void
     {
         $I->amGoingTo("delete the user");
-        $I->amOnPage('/users/delete');
+        $I->sendAjaxPostRequest('/users/delete', ['delete_account' => 'Delete Account']);
         $I->dontSeeInDatabase('users', ['username' => 'go']);
     }
 }

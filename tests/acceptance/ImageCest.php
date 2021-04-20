@@ -46,7 +46,7 @@ class ImageCest
     public function viewAndDeleteAnImage(AcceptanceTester $I): void
     {
         $I->amOnPage('/images');
-        $I->seeElement('img', ['alt' => 'Andy.png']);
+        $I->seeNumberOfElements('img[alt="Andy.png"]', 1);
 
         $I->amGoingTo("click on the image");
         $I->click('Andy.png');

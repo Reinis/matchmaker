@@ -7,6 +7,8 @@ namespace MatchmakerTests\Unit;
 
 
 use Codeception\Test\Unit;
+use DateTime;
+use Matchmaker\Entities\Image;
 use Matchmaker\Entities\User;
 use UnitTester;
 
@@ -29,7 +31,7 @@ class UserTest extends Unit
         self::assertEquals('John', $user->getFirstName());
         self::assertEquals('Doe', $user->getLastName());
         self::assertEquals('male', $user->getGender());
-        self::assertEquals('Default', $user->getProfilePic());
+        self::assertEquals(null, $user->getProfilePic());
 
         return $user;
     }
@@ -79,8 +81,16 @@ class UserTest extends Unit
      */
     public function testSetProfilePic(User $user): void
     {
-        $user->setProfilePic('Other Picture.png');
+        $image = new Image(
+            'Other Picture.png',
+            'test',
+            'random',
+            'randoms',
+            new DateTime('now'),
+            0,
+        );
+        $user->setProfilePic($image);
 
-        self::assertEquals('Other Picture.png', $user->getProfilePic());
+        self::assertEquals('Other Picture.png', $user->getProfilePic()->getOriginalName());
     }
 }

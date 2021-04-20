@@ -44,7 +44,7 @@ class Image
         return $this->originalName;
     }
 
-    public function getResizedFileLocation(): string
+    public function getResizedFilePath(): string
     {
         $name = $this->getResizedFileName();
 
@@ -76,7 +76,7 @@ class Image
         return $this->id;
     }
 
-    public function getOriginalFileLocation(): string
+    public function getOriginalFilePath(): string
     {
         $name = $this->getOriginalFileName();
 
@@ -101,5 +101,10 @@ class Image
     public function getImageDir(): string
     {
         return StorageMap::getImageDir($this->getStorageLocation());
+    }
+
+    public function getResizedImageExtendedPath(): string
+    {
+        return $this->getImageDir() . '/' . $this->getResizedFilePath();
     }
 }

@@ -14,7 +14,7 @@ class User
     private string $firstName;
     private string $lastName;
     private string $gender;
-    private string $profilePic;
+    private ?Image $profilePic;
 
     public function __construct(
         string $username,
@@ -22,7 +22,7 @@ class User
         string $firstName,
         string $lastName,
         string $gender = 'Unknown',
-        string $profilePic = 'Default',
+        ?Image $profilePic = null,
         ?int $id = null
     )
     {
@@ -60,12 +60,12 @@ class User
         $this->gender = $gender;
     }
 
-    public function getProfilePic(): string
+    public function getProfilePic(): ?Image
     {
         return $this->profilePic;
     }
 
-    public function setProfilePic(string $profilePic): void
+    public function setProfilePic(?Image $profilePic): void
     {
         $this->profilePic = $profilePic;
     }
@@ -93,5 +93,10 @@ class User
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
+    }
+
+    public function getProfilePicId(): ?int
+    {
+        return $this->profilePic ? $this->profilePic->getId() : null;
     }
 }
