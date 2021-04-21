@@ -13,7 +13,6 @@ use Matchmaker\Config;
 use Matchmaker\Entities\Image;
 use Matchmaker\Repositories\MySQLImageRepository;
 use Matchmaker\StorageMap;
-use PDO;
 
 
 class MySQLImageRepositoryTest extends Unit
@@ -23,7 +22,6 @@ class MySQLImageRepositoryTest extends Unit
     protected IntegrationTester $tester;
 
     private ?MySQLImageRepository $repository = null;
-    private ?PDO $connection = null;
 
     public function testAdd(): void
     {
@@ -140,16 +138,14 @@ class MySQLImageRepositoryTest extends Unit
         $this->tester->seeNumRecords(0, 'pictures');
     }
 
-    public function _before(): void
+    protected function _before(): void
     {
-        if (null === $this->connection || null === $this->repository) {
+        if (null === $this->repository) {
             $config = new Config(self::CONFIG_FILENAME);
 
             $this->repository = new MySQLImageRepository($config);
-            $this->connection = $this->getModule('Db')->dbhs['default'];
         }
 
-        $this->resetTestDBTables();
         $this->tester->haveInDatabase(
             'users',
             [
@@ -161,14 +157,5 @@ class MySQLImageRepositoryTest extends Unit
                 'gender' => 'male'
             ]
         );
-    }
-
-    private function resetTestDBTables(): void
-    {
-        $sql = "drop table if exists `matchmaker_test`.`pictures`;";
-        $this->connection->exec($sql);
-
-        $sql = "create table `matchmaker_test`.`pictures` like `matchmaker`.`pictures`;";
-        $this->connection->exec($sql);
     }
 }

@@ -25,17 +25,24 @@ class MySQLUserRepositoryTest extends Unit
 
     public function testAdd(): void
     {
-        $user = new User('Jhonny', '***', 'John', 'Doe', 'male');
+        $user = new User('Johnny', '***', 'John', 'Doe', 'male');
         $this->repository->create($user);
 
         $this->tester->seeInDatabase(
             'users',
             [
+                'username' => 'Johnny',
+                'secret' => '***',
                 'first_name' => 'John',
                 'last_name' => 'Doe',
-                'gender' => 'male'
+                'gender' => 'male',
+                'profile_pic' => null,
             ]
         );
+
+        // Clean up the database for a single test function
+        $sql = "delete from `users` where username = 'Johnny'; alter table `users` auto_increment=1;";
+        $this->connection->exec($sql);
     }
 
     public function testGetAll(): void
@@ -125,7 +132,7 @@ class MySQLUserRepositoryTest extends Unit
         $this->tester->seeNumRecords(0, 'users');
     }
 
-    public function _before(): void
+    protected function _before(): void
     {
         if (null === $this->connection || null === $this->repository) {
             $config = new Config(self::CONFIG_FILENAME);
@@ -133,16 +140,5 @@ class MySQLUserRepositoryTest extends Unit
             $this->repository = new MySQLUserRepository($config);
             $this->connection = $this->getModule('Db')->dbhs['default'];
         }
-
-        $this->resetTestDBTables();
-    }
-
-    private function resetTestDBTables(): void
-    {
-        $sql = "drop table if exists `matchmaker_test`.`users`;";
-        $this->connection->exec($sql);
-
-        $sql = "create table `matchmaker_test`.`users` like `matchmaker`.`users`;";
-        $this->connection->exec($sql);
     }
 }
