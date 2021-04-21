@@ -52,17 +52,6 @@ class MySQLImageRepositoryTest extends Unit
     public function testGetAll(): void
     {
         $this->tester->haveInDatabase(
-            'users',
-            [
-                'id' => 1,
-                'username' => 'go',
-                'secret' => '***',
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'gender' => 'male',
-            ]
-        );
-        $this->tester->haveInDatabase(
             'pictures',
             [
                 'original_name' => 'image.png',
@@ -131,18 +120,6 @@ class MySQLImageRepositoryTest extends Unit
     public function testDelete(): void
     {
         $this->tester->haveInDatabase(
-            'users',
-            [
-                'id' => 1,
-                'username' => 'go',
-                'secret' => '***',
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'gender' => 'male',
-            ]
-        );
-
-        $this->tester->haveInDatabase(
             'pictures',
             [
                 'id' => 3,
@@ -173,6 +150,17 @@ class MySQLImageRepositoryTest extends Unit
         }
 
         $this->resetTestDBTables();
+        $this->tester->haveInDatabase(
+            'users',
+            [
+                'id' => 1,
+                'username' => 'go',
+                'secret' => '***',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'gender' => 'male'
+            ]
+        );
     }
 
     private function resetTestDBTables(): void
