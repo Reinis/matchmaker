@@ -13,6 +13,11 @@ modules:
         dsn: "%MATCHMAKER_DB_DSN%"
         user: "%MATCHMAKER_DB_USER%"
         password: "%MATCHMAKER_DB_PASSWORD%"
+        dump: storage/matchmaker.sql
+        populate: true
+        cleanup: false
+        populator: >-
+          mysql -u $user -h $host --password='$password' $dbname < $dump
     - Asserts
     - \Helper\Acceptance
 step_decorators: ~
