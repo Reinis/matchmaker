@@ -21,4 +21,6 @@ interface UserRepository
     public function delete(int $id): void;
 
     public function getUserByUsername(string $username): User;
+
+    public function getOtherUsers(User $user): Users;
 }

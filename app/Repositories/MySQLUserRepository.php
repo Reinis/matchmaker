@@ -160,4 +160,18 @@ class MySQLUserRepository extends MySQLRepository implements UserRepository
             $result->user_id,
         );
     }
+
+    public function getOtherUsers(User $user): Users
+    {
+        $sql = <<<EOE
+        select
+            `users`.id as user_id, username, secret, first_name, last_name, gender,
+            profile_pic as img_id, original_name, storage, original_file, resized_file, upload_time
+        from `users` left join `pictures` on `users`.profile_pic = `pictures`.id
+        where `users`.id != ?;
+        EOE;
+        $errorMessage = "Other users not found";
+
+        return $this->fetchAll($sql, $errorMessage, (string)$user->getId());
+    }
 }

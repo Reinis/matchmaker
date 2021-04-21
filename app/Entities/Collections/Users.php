@@ -17,7 +17,7 @@ class Users implements IteratorAggregate, Countable
     /**
      * @var User[]
      */
-    private array $users;
+    private array $users = [];
 
     public function __construct(User ...$users)
     {

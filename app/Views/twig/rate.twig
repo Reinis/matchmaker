@@ -1,0 +1,33 @@
+{% extends "base.twig" %}
+
+{% block title %}Rate{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center">
+        <div class="w-64">
+            <a href="/">
+                <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
+            </a>
+            <form
+                    action="/favorites/{{ image.userId }}"
+                    method="post"
+                    class="grid grid-cols-2 gap-2 text-4xl justify-between mt-4">
+                <input type="hidden" name="user_id" value="{{ image.userId }}">
+                <input
+                        type="submit"
+                        name="favorite"
+                        value="👍"
+                        formaction="/favorites/{{ image.userId }}/like"
+                        class="justify-self-start p-2"
+                >
+                <input
+                        type="submit"
+                        name="favorite"
+                        value="👎"
+                        formaction="/favorites/{{ image.userId }}/dislike"
+                        class="justify-self-end p-2"
+                >
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -15,6 +15,7 @@
                 <a href="/images/{{ image.id }}">
                     <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
                 </a>
+                {{ image.storageLocation }}
             </div>
         {% endfor %}
     </div>

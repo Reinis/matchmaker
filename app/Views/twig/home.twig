@@ -12,13 +12,16 @@
         </div>
     {% endif %}
     {% if session.auth.user %}
-        <div>
-            {% set image = user.profilePic %}
-            {% if image %}
-                <div class="flex justify-center">
-                    <img src="{{ image.resizedImageExtendedPath }}" alt="image">
+        <div class="flex gap-8 justify-center m-4">
+            {% for user in others %}
+                <div class="w-32 h-32">
+                    {% set image = user.profilePic %}
+                    <a href="/favorites/{{ image.id }}">
+                        <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
+                    </a>
+                    {{ user.username }}
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock %}

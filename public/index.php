@@ -14,19 +14,24 @@ use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Matchmaker\Config;
+use Matchmaker\Controllers\FavoritesController;
 use Matchmaker\Controllers\HomeController;
 use Matchmaker\Controllers\ImageController;
 use Matchmaker\Controllers\LoginController;
 use Matchmaker\Controllers\ProfileController;
 use Matchmaker\Controllers\UploadController;
+use Matchmaker\Repositories\FavoriteRepository;
 use Matchmaker\Repositories\FilesystemRepository;
 use Matchmaker\Repositories\ImageRepository;
+use Matchmaker\Repositories\MySQLFavoriteRepository;
 use Matchmaker\Repositories\MySQLImageRepository;
 use Matchmaker\Repositories\MySQLUserRepository;
 use Matchmaker\Repositories\UserRepository;
+use Matchmaker\Services\FavoriteService;
 use Matchmaker\Services\ImageService;
 use Matchmaker\Services\LoginService;
 use Matchmaker\Services\ProfileService;
+use Matchmaker\Services\UserService;
 use Matchmaker\StorageMap;
 use Matchmaker\Views\TwigView;
 use Matchmaker\Views\View;
@@ -44,6 +49,8 @@ $container->add(Config::class)
 $container->add(UserRepository::class, MySQLUserRepository::class)
     ->addArgument(Config::class);
 $container->add(ImageRepository::class, MySQLImageRepository::class)
+    ->addArgument(Config::class);
+$container->add(FavoriteRepository::class, MySQLFavoriteRepository::class)
     ->addArgument(Config::class);
 
 try {
@@ -76,6 +83,10 @@ $container->add(ImageService::class)
 $container->add(ProfileService::class)
     ->addArgument(UserRepository::class)
     ->addArgument(ImageService::class);
+$container->add(UserService::class)
+    ->addArgument(UserRepository::class);
+$container->add(FavoriteService::class)
+    ->addArgument(FavoriteRepository::class);
 
 $container->add(FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
@@ -95,7 +106,8 @@ $container->add(FinfoMimeTypeDetector::class);
 
 $container->add(HomeController::class)
     ->addArgument(View::class)
-    ->addArgument(ProfileService::class);
+    ->addArgument(ProfileService::class)
+    ->addArgument(UserService::class);
 $container->add(LoginController::class)
     ->addArgument(View::class)
     ->addArgument(LoginService::class);
@@ -109,6 +121,11 @@ $container->add(ImageController::class)
 $container->add(ProfileController::class)
     ->addArgument(View::class)
     ->addArgument(ProfileService::class);
+$container->add(FavoritesController::class)
+    ->addArgument(View::class)
+    ->addArgument(ProfileService::class)
+    ->addArgument(ImageService::class)
+    ->addArgument(FavoriteService::class);
 
 
 $dispatcher = FastRoute\simpleDispatcher(
@@ -134,6 +151,10 @@ $dispatcher = FastRoute\simpleDispatcher(
         $r->addRoute('GET', '/images/{id:\d+}', [ImageController::class, 'image']);
 
         $r->addRoute('POST', '/images/delete/{id:\d+}', [ImageController::class, 'deleteImage']);
+
+        $r->addRoute('GET', '/favorites/{id:\d+}', [FavoritesController::class, 'rating']);
+
+        $r->addRoute('POST', '/favorites/{id:\d+}/{rating:like|dislike}', [FavoritesController::class, 'rate']);
     }
 );
 

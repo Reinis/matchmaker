@@ -24,9 +24,14 @@ DROP TABLE IF EXISTS `favorites`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `favorites` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_idx` bigint(20) NOT NULL,
-  `favorite_idx` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`)
+  `user_id` bigint(20) DEFAULT NULL,
+  `favorite_id` bigint(20) DEFAULT NULL,
+  `rating` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_user_idx` (`user_id`),
+  KEY `fk_favorite_idx` (`favorite_id`),
+  CONSTRAINT `fk_favorite_idx` FOREIGN KEY (`favorite_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_user_idx` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
