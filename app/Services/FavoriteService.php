@@ -7,12 +7,16 @@ namespace Matchmaker\Services;
 
 
 use InvalidArgumentException;
+use Matchmaker\Entities\Collections\Users;
 use Matchmaker\Entities\Favorite;
+use Matchmaker\Entities\User;
 use Matchmaker\Repositories\FavoriteRepository;
+use Matchmaker\Repositories\UserRepository;
 
 
 class FavoriteService
 {
+    private UserRepository $userRepository;
     private FavoriteRepository $favoriteRepository;
 
     /**
@@ -23,9 +27,13 @@ class FavoriteService
         'dislike' => -1,
     ];
 
-    public function __construct(FavoriteRepository $favoriteRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        FavoriteRepository $favoriteRepository
+    )
     {
         $this->favoriteRepository = $favoriteRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function add(int $userId, int $favoriteId, string $rating): void
@@ -41,5 +49,18 @@ class FavoriteService
         $favorite->addRating($this->ratingValues[$rating]);
 
         $this->favoriteRepository->update($favorite);
+    }
+
+    public function get(User $user): Users
+    {
+        $favorites = $this->favoriteRepository->getMatches($user->getId());
+
+        $users = new Users();
+
+        foreach ($favorites as $favorite) {
+            $users->add($this->userRepository->get($favorite->getUserId()));
+        }
+
+        return $users;
     }
 }

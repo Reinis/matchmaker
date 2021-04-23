@@ -7,7 +7,10 @@ namespace Matchmaker\Repositories;
 
 
 use InvalidArgumentException;
+use Matchmaker\Entities\Collections\Favorites;
+use Matchmaker\Entities\Collections\Users;
 use Matchmaker\Entities\Favorite;
+use Matchmaker\Entities\User;
 
 
 class MySQLFavoriteRepository extends MySQLRepository implements FavoriteRepository
@@ -69,5 +72,43 @@ class MySQLFavoriteRepository extends MySQLRepository implements FavoriteReposit
         $sql = "delete from `favorites` where id = ?;";
         $statement = $this->connection->prepare($sql);
         $statement->execute([$id]);
+    }
+
+    public function getMatches(int $userId): Favorites
+    {
+        $sql = <<<EOE
+        select * from `favorites`
+        where user_id in (select favorite_id from `favorites` where user_id = ?)
+            and rating > 0;
+        EOE;
+        $errorMessage = "Favourites could not be found";
+
+        return $this->fetchAll($sql, $errorMessage, (string)$userId);
+    }
+
+    protected function fetchAll(string $sql, string $errorMessage, string ...$args): Favorites
+    {
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($args);
+        $results = $statement->fetchAll();
+
+        if ($results === false) {
+            throw new InvalidArgumentException($errorMessage);
+        }
+
+        $favorites = new Favorites();
+
+        foreach ($results as $result) {
+            $favorites->add(
+                new Favorite(
+                    $result->user_id,
+                    $result->favorite_id,
+                    $result->rating,
+                    $result->id,
+                )
+            );
+        }
+
+        return $favorites;
     }
 }

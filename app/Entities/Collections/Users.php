@@ -31,6 +31,17 @@ class Users implements IteratorAggregate, Countable
         $this->users[] = $user;
     }
 
+    public function hasId(int $id): bool
+    {
+        foreach ($this->users as $user) {
+            if ($user->getId() === $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return ArrayIterator|User[]
      */

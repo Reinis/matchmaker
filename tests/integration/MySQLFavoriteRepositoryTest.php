@@ -105,6 +105,44 @@ class MySQLFavoriteRepositoryTest extends Unit
         $this->tester->seeNumRecords(0, 'favorites');
     }
 
+    public function testGetMatches(): void
+    {
+        $this->tester->haveInDatabase(
+            'favorites',
+            [
+                'user_id' => 1,
+                'favorite_id' => 2,
+                'rating' => 1,
+            ]
+        );
+        $this->tester->haveInDatabase(
+            'favorites',
+            [
+                'user_id' => 2,
+                'favorite_id' => 1,
+                'rating' => 1,
+            ]
+        );
+        $this->tester->haveInDatabase(
+            'favorites',
+            [
+                'user_id' => 3,
+                'favorite_id' => 1,
+                'rating' => -1,
+            ]
+        );
+
+        $favorites = $this->repository->getMatches(1);
+
+        self::assertCount(1, $favorites);
+
+        $favorite = $favorites->getIterator()->current();
+
+        self::assertEquals(2, $favorite->getUserId());
+        self::assertEquals(1, $favorite->getFavoriteId());
+        self::assertGreaterThan(0, $favorite->getRating());
+    }
+
     protected function _before(): void
     {
         if (null === $this->connection || null === $this->repository) {

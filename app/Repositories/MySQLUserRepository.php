@@ -174,4 +174,18 @@ class MySQLUserRepository extends MySQLRepository implements UserRepository
 
         return $this->fetchAll($sql, $errorMessage, (string)$user->getId(), $user->getGender());
     }
+
+    public function get(int $id): User
+    {
+        $sql = <<<EOE
+        select
+               `users`.id as user_id, username, secret, first_name, last_name, gender,
+               profile_pic as img_id, original_name, storage, original_file, resized_file, upload_time
+        from `users` left join `pictures` on `users`.profile_pic = `pictures`.id
+        where user_id = ?;
+        EOE;
+        $errorMessage = "User '$id' not found";
+
+        return $this->fetch($sql, $errorMessage, (string)$id);
+    }
 }

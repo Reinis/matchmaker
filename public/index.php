@@ -86,6 +86,7 @@ $container->add(ProfileService::class)
 $container->add(UserService::class)
     ->addArgument(UserRepository::class);
 $container->add(FavoriteService::class)
+    ->addArgument(UserRepository::class)
     ->addArgument(FavoriteRepository::class);
 
 $container->add(FilesystemLoader::class)
@@ -107,7 +108,8 @@ $container->add(FinfoMimeTypeDetector::class);
 $container->add(HomeController::class)
     ->addArgument(View::class)
     ->addArgument(ProfileService::class)
-    ->addArgument(UserService::class);
+    ->addArgument(UserService::class)
+    ->addArgument(FavoriteService::class);
 $container->add(LoginController::class)
     ->addArgument(View::class)
     ->addArgument(LoginService::class);

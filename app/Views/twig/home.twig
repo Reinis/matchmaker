@@ -19,6 +19,9 @@
                     <a href="/favorites/{{ image.id }}">
                         <img src="{{ image.resizedImageExtendedPath }}" alt="{{ image.originalName }}">
                     </a>
+                    {% if matches.hasId(user.id) %}
+                        ❤️
+                    {% endif %}
                     {{ user.username }}
                 </div>
             {% endfor %}

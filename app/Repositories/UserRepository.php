@@ -14,6 +14,8 @@ interface UserRepository
 {
     public function create(User $user): void;
 
+    public function get(int $id): User;
+
     public function getAll(): Users;
 
     public function update(User $user): void;
